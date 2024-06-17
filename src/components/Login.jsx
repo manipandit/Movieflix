@@ -47,10 +47,7 @@ function Login() {
           })
             .then(() => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
-
               dispatch(addUser({ uid, email, displayName, photoURL }));
-
-              navigate("/browse");
             })
             .catch((error) => {
               const errorCode = error.code;
@@ -70,7 +67,6 @@ function Login() {
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user);
-          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;

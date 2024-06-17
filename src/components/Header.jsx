@@ -1,10 +1,13 @@
 import { signOut } from "firebase/auth";
-import React from "react";
+import React, { useEffect } from "react";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
+import { addUser, removeUser } from "../utils/userSlice";
 
 function Header() {
+  const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
   const navigate = useNavigate();
@@ -12,9 +15,7 @@ function Header() {
   const handleSignout = () => {
     try {
       signOut(auth)
-        .then(() => {
-          navigate("/");
-        })
+        .then(() => {})
         .catch((error) => {
           navigate("/error");
         });
@@ -22,6 +23,20 @@ function Header() {
       console.log(error);
     }
   };
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(addUser({ uid, email, displayName, photoURL }));
+        navigate("/browse");
+      } else {
+        // User is signed out
+        dispatch(removeUser());
+        navigate("/");
+      }
+    });
+  }, []);
+
   return (
     <div className="absolute z-10 flex items-center justify-between w-full px-8 py-2 bg-gradient-to-b from-black">
       <img
