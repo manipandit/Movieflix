@@ -4,12 +4,20 @@ import { checkValidData } from "../utils/validate";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 function Login() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const nameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
@@ -18,6 +26,7 @@ function Login() {
   };
 
   const handleAuth = () => {
+    const name = nameRef?.current?.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
@@ -31,7 +40,23 @@ function Login() {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+
+          updateProfile(user, {
+            displayName: name,
+            photoURL: "https://avatars.githubusercontent.com/u/110151059?v=4",
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+
+              dispatch(addUser({ uid, email, displayName, photoURL }));
+
+              navigate("/browse");
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              setErrorMessage(errorCode + " - " + errorMessage);
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -45,6 +70,7 @@ function Login() {
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user);
+          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -53,6 +79,7 @@ function Login() {
         });
     }
   };
+
   return (
     <div className="">
       <Header />
@@ -74,6 +101,7 @@ function Login() {
         <div className="mt-5">
           {!isSignInForm && (
             <input
+              ref={nameRef}
               type="text"
               placeholder="Full Name"
               className="m-2 px-2 py-4 w-full bg-zinc-800 bg-opacity-60 border-[0.5px] border-gray-500 rounded-md"
