@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* styles.css */
+.custom-scrollbar {
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px; /* Hide scrollbar for WebKit browsers */
+}
+
+.custom-scrollbar:focus,
+.custom-scrollbar:hover {
+  scrollbar-width: thin; /* Make scrollbar visible on hover or focus for Firefox */
+  scrollbar-color: #4b4a4a transparent;
+}
+
+.custom-scrollbar:focus::-webkit-scrollbar,
+.custom-scrollbar:hover::-webkit-scrollbar {
+  width: 8px; /* Make scrollbar visible on hover or focus for WebKit browsers */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Transparent track */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5); /* Dark, semi-transparent thumb */
+  border-radius: 4px; /* Rounded corners */
+}

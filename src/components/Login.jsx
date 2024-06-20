@@ -9,7 +9,8 @@ import {
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addUser } from "../utils/userSlice";
+import { addUser } from "../utils/store/userSlice";
+import { HERO_IMG, USER_ICON } from "../utils/constants";
 
 function Login() {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ function Login() {
 
           updateProfile(user, {
             displayName: name,
-            photoURL: "https://avatars.githubusercontent.com/u/110151059?v=4",
+            photoURL: USER_ICON,
           })
             .then(() => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
@@ -80,11 +81,7 @@ function Login() {
     <div className="">
       <Header />
       <div className="absolute">
-        <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/51c1d7f7-3179-4a55-93d9-704722898999/be90e543-c951-40d0-9ef5-e067f3e33d16/IN-en-20240610-popsignuptwoweeks-perspective_alpha_website_large.jpg"
-          alt="hero-img"
-          className=""
-        />
+        <img src={HERO_IMG} alt="hero-img" className="" />
       </div>
 
       <form
